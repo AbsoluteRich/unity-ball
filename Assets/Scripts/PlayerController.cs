@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private int count;
     private float movementX;
     private float movementY;
+    private AudioSource explode;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
         count = 0;
         SetCountText();
         winTextObject.SetActive(false);
+        explode = GetComponent<AudioSource>();
     }
 
     void OnMove(InputValue movementValue)
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("PickUp"))
         {
+            explode.Play();
             other.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
