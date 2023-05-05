@@ -59,5 +59,9 @@ public class PlayerController : MonoBehaviour
             count = count + 1;
             SetCountText();
         }
+        else if (other.gameObject.CompareTag("Walls"))
+        {
+            Debug.Log("Touching wall");
+        }
     }
 }
