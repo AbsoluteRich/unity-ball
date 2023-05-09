@@ -61,7 +61,8 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Walls"))
         {
-            Debug.Log("Touching wall");
+            rb.AddForce(1000, 1000, 1000);
+            // When the player collides with a wall, hide the player, play a sound effect and then display the losing text
         }
     }
 }
