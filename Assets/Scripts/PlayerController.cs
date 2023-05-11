@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerController : MonoBehaviour
     private float movementX;
     private float movementY;
     private AudioSource explode;
+    private string sceneName;
+    public GameObject loseTextObject;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +26,9 @@ public class PlayerController : MonoBehaviour
         SetCountText();
         winTextObject.SetActive(false);
         explode = GetComponent<AudioSource>();
+        Scene currentScene = SceneManager.GetActiveScene();
+        sceneName = currentScene.name;
+        loseTextObject.SetActive(false);
     }
 
     void OnMove(InputValue movementValue)
@@ -37,9 +43,18 @@ public class PlayerController : MonoBehaviour
     {
         countText.text = "Count: " + count.ToString();
 
-        if (count >= 12)
+        if (count >= 12) // When the player has won
         {
-            winTextObject.SetActive(true);
+            if (sceneName == "MiniGame")
+            {
+                SceneManager.LoadScene(sceneName: "Level2");
+            }
+            else if (sceneName == "Level2")
+            {
+                winTextObject.SetActive(true);
+            }
+            
+            Debug.Log(sceneName);
         }
     }
 
@@ -52,14 +67,15 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("PickUp"))
+        Debug.Log("Collided with " + other.gameObject.name);
+        if (other.gameObject.CompareTag("PickUp")) // When the player collides with a pick up
         {
             explode.Play();
             other.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
         }
-        else if (other.gameObject.CompareTag("Walls"))
+        else if (other.gameObject.CompareTag("Walls")) // Supposed to activate when the player collides with a wall
         {
             rb.AddForce(1000, 1000, 1000);
             // When the player collides with a wall, hide the player, play a sound effect and then display the losing text
