@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
         loseTextObject.SetActive(false);
     }
 
+    // Called when a move event occurs
     void OnMove(InputValue movementValue)
     {
         Vector2 movementVector = movementValue.Get<Vector2>();
@@ -39,25 +40,29 @@ public class PlayerController : MonoBehaviour
         movementY = movementVector.y;
     }
 
+    // Called to change the count text in the top left of the screen
     void SetCountText()
     {
         countText.text = "Count: " + count.ToString();
 
         if (count >= 12) // When the player has won
         {
-            if (sceneName == "MiniGame")
+            Debug.Log(sceneName);
+            switch (sceneName)
             {
-                SceneManager.LoadScene(sceneName: "Level2");
-            }
-            else if (sceneName == "Level2")
-            {
-                winTextObject.SetActive(true);
+                case "MiniGame":
+                    SceneManager.LoadScene(sceneName: "Level2");
+                    break;
+
+                case "Level2":
+                    winTextObject.SetActive(true);
+                    break;
             }
             
-            Debug.Log(sceneName);
         }
     }
 
+    // Called every frame
     void FixedUpdate()
     {
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
@@ -65,6 +70,7 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(movement * speed);
     }
 
+    // Called when player collides with an object
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Collided with " + other.gameObject.name);
@@ -75,10 +81,12 @@ public class PlayerController : MonoBehaviour
             count = count + 1;
             SetCountText();
         }
-        else if (other.gameObject.CompareTag("Walls")) // Supposed to activate when the player collides with a wall
+        else if (other.gameObject.CompareTag("Walls")) // When the player collides with a wall
         {
-            rb.AddForce(1000, 1000, 1000);
-            // When the player collides with a wall, hide the player, play a sound effect and then display the losing text
+            // Todo: Hide the player, lock inputs, and play a sound effect
+            //  Pickups should not be collidable when the player has lost
+            gameObject.SetActive(false);  // THIS JUST WORKS!!
+            loseTextObject.SetActive(true);
         }
     }
 }
