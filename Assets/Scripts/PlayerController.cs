@@ -55,19 +55,16 @@ public class PlayerController : MonoBehaviour
         if (count >= 12) // When the player has won
         {
             Debug.Log(sceneName);
-            switch (sceneName)
+            if (sceneName == null)
             {
-                case "MiniGame":
-                    SceneManager.LoadScene(sceneName: "Level2");
-                    break;
-
-                case "Level2":
-                    powerup.Play();
-                    hasWon = true;
-                    winTextObject.SetActive(true);
-                    break;
+                SceneManager.LoadScene(sceneName: "Level2");
             }
-            
+            else if (sceneName == "Level2")
+            {
+                powerup.Play();
+                hasWon = true;
+                winTextObject.SetActive(true);
+            }
         }
     }
 
